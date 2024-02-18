@@ -8,8 +8,8 @@ from .views import (
 )
 
 urlpatterns = [
-    path("create/", CreateTaskView.as_view(), name="create-task"),
-    path("<int:pk>/edit/", EditTaskView.as_view(), name="edit-task"),
-    path("list/", TaskListView.as_view(), name="tasks-list"),
-    path("<int:pk>/task/", GetTaskView.as_view(), name="task")
+    path("task/create/", CreateTaskView.as_view(), name="create-task"),
+    path("task/<int:pk>/edit/", EditTaskView.as_view(), name="edit-task"),
+    path("task/list/", TaskListView.as_view(), name="task-list"),
+    path("task/<int:pk>/detail/", GetTaskView.as_view(), name="task")
 ]

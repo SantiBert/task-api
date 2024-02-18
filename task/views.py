@@ -1,12 +1,15 @@
+from django.db import transaction
+
 from rest_framework.response import Response
 from rest_framework import generics, permissions, status
 from rest_framework.generics import ListAPIView, DestroyAPIView, GenericAPIView
 
-from .serializer import TaskSerializer, CrateTaskSerializer
+
+from .serializers import TaskSerializer, CrateTaskSerializer
 from .models import Task
 
 class GetTaskView(GenericAPIView):
-    #permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = None
     
     def get(self, request, pk):
@@ -31,14 +34,26 @@ class GetTaskView(GenericAPIView):
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-class TaskListView(ListAPIView):
-    queryset = Task.objects.filter(is_active= True)
-    serializer_class = TaskSerializer
+
+class TaskListView(GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = None
+    
+    def get(self, request):
+        try:
+            tasks = Task.objects.filter(is_active= True)
+            serializer = TaskSerializer(tasks, many=True)
+            return Response({"tasks": serializer.data}, status=status.HTTP_200_OK)
+        except Task.DoesNotExist:
+            return Response({"error": "Task does not exist"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class CreateTaskView(GenericAPIView):
-    #permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = CrateTaskSerializer
     
+    @transaction.atomic()
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
         if not serializer.is_valid():
@@ -64,7 +79,7 @@ class CreateTaskView(GenericAPIView):
             return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class EditTaskView(GenericAPIView):
-    #permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = CrateTaskSerializer
     
     def put(self, request, pk):
