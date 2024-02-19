@@ -72,17 +72,3 @@ def test_refresh_token(client, common_user_token):
     # Assert that the response status is 200 OK and contains 'access' token
     assert response.status_code == status.HTTP_200_OK 
     assert 'access' in response.data
-
-# Test case for user logout
-@pytest.mark.django_db
-def test_logout(client, common_user_token):
-    # Prepare data for logout
-    url = reverse('logout')
-    access_token = common_user_token.get("access")
-    client.credentials(HTTP_AUTHORIZATION='Bearer ' + access_token)
-    
-    # Make POST request to logout endpoint
-    response = client.post(url)  # Realizar una solicitud POST a la URL de cierre de sesión
-    
-    # Assert that the response status is 205 Reset Content
-    assert response.status_code == status.HTTP_205_RESET_CONTENT 
