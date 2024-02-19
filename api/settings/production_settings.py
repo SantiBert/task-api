@@ -6,7 +6,7 @@ DEBUG = False
 ALLOWED_HOSTS = ['sbertero.pythonanywhere.com']
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000', 
+    'https://neon-piroshki-49765e.netlify.app',
 ]
 
 DATABASES = {
