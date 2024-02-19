@@ -3,7 +3,7 @@ from .base_settings import *
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['http://sbertero.pythonanywhere.com/']
+ALLOWED_HOSTS = ['sbertero.pythonanywhere.com']
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000', 
